@@ -14,54 +14,66 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 })
 
 describe('QM Kontakt Test Suite', () => {
-  beforeEach(() => {
+  before(() => {
     const downloadsFolder = Cypress.config('downloadsFolder')
     cy.task('deleteFolder', downloadsFolder)
   })
   
   const downloadsFolder = Cypress.config('downloadsFolder')
   it('Tests the kontakt page', () => {
-    cy.visit('www.qualityminds.de/')
+    cy.visit('/')
+
     cy.get('a')
       .contains('Kontakt')
       .click()
+
     cy.get('a.mailto-link')
       .contains('hello@qualityminds.de')
       .should('exist')
+
     cy.url().then(($url) => {
       cy.go('back')
+
       cy.contains('Kontakt & Anfahrt')
         .click()
+
       cy.url()
         .should('equal', $url)
     })
   })
-  it.only('Tests submenus', () => {
-    cy.visit('www.qualityminds.de/')
+  it('Tests submenus', () => {
+    cy.visit('/')
+
     cy.get('a')
       .contains('Portfolio')
       .trigger('mouseover')
       .parent()
       .find('ul.sub-menu')
       .should('be.visible')
+
     cy.get('a')
       .contains('Web, Automation & Mobile Testing')
       .click()
+
     cy.get('a')
       .contains('Portfolio')
       .should('have.css', 'color')
       .and('eq', 'rgb(130, 186, 69)')
+
     cy.get('div.tab-title-row')
       .contains('Mobile')
       .click()
+
     cy.get('div[id="team-tab-three-body"]')
       .should('be.visible')
+
     cy.get('div.tab-title-row').within(() => {
       cy.get('div.active-team-tab')
         .not('.inactive-team-tab')
         .should('have.css', 'border-bottom-color')
         .and('eq', 'rgb(151, 151, 151)')
     })
+
     cy.get('div.tab-download-button')
       .contains('Flyer Find the Bug Session')
       .should('be.visible')
@@ -73,19 +85,69 @@ describe('QM Kontakt Test Suite', () => {
       .click()
 
     const filename = path.join(downloadsFolder, 'FLYER FIND THE BUG SESSION.pdf')
-    cy.readFile(filename, {timeout: 15000})
+    cy.readFile(filename, {timeout: 5000})
       .should('exist')
-    
-    // .within(() => {
-    //   cy.get('li.current-menu-item').within(() => {
-    //     cy.get('a')
-    //       .should('contain.text', 'Portfolio')
-    //   })
-    // })
+  })
 
+  it.only('Tests the Karriere page', () => {
+    cy.visit('/')
 
-      // .children()
-      // .find('li.current-menu-item')
-      // .should('contain.text', 'Portfolio')
+    cy.get('a')
+      .contains('Karriere')
+      .click()
+
+      cy.get('a')
+        .contains('Bewirb dich jetzt!')
+        .click()
+
+      cy.get('form[id="CF5bcf0384b847c_1"]')
+        .should('be.visible')
+
+      cy.get('input[id="fld_1982372_1"]')
+        .click()
+
+      cy.get('div.contact-form-first-name')
+        .find('span.parsley-required')
+        .should('be.visible')
+
+      cy.get('div.contact-form-last-name')
+        .find('span.parsley-required')
+        .should('be.visible')
+
+      cy.get('input[placeholder="Email*"]')
+        .parent()
+        .parent()
+        .find('span.parsley-required')
+        .should('be.visible')
+
+      cy.get('div.contact-form-first-name')
+        .find('input')
+        .type('Name')
+
+      cy.get('div.contact-form-last-name')
+        .find('input')
+        .type('Last')
+
+      cy.get('input[placeholder="Email*"]')
+        .parent()
+        .parent()
+        .find('span.parsley-required')
+        .should('be.visible')
+
+      cy.get('input[placeholder="Email*"]')
+        .type('Invalid')
+
+      cy.get('input[placeholder="Email*"]')
+        .parent()
+        .parent()
+        .find('span.parsley-type')
+        .should('be.visible')
+      
+      //brakuje uploadu pliku i essa
+
+      cy.get('div.consent-field')
+        .find('input')
+        .check()
+        .should('be.checked')
   })
 })
