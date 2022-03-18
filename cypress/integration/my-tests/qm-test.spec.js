@@ -35,8 +35,7 @@ describe('QM Kontakt Test Suite', () => {
       cy.go('back')
 
       cy.contains('Kontakt & Anfahrt')
-        .scrollIntoView()
-        .click()
+        .click({ force: true })
 
       cy.url()
         .should('equal', $url)
