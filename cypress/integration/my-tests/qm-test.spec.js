@@ -89,7 +89,7 @@ describe('QM Kontakt Test Suite', () => {
       .should('exist')
   })
 
-  it.only('Tests the Karriere page', () => {
+  it('Tests the Karriere page', () => {
     cy.visit('/')
 
     cy.get('a')
