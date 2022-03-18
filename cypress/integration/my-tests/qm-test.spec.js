@@ -143,7 +143,13 @@ describe('QM Kontakt Test Suite', () => {
         .find('span.parsley-type')
         .should('be.visible')
       
-      //brakuje uploadu pliku i essa
+      cy.get('button')
+        .contains('Dateien hochladen')
+        .selectFile('cypress/upload/FLYER FIND THE BUG SESSION.pdf', { action: 'drag-drop'})
+
+      cy.get('div.cf2-file-control')
+        .find('span.cf2-file-name')
+        .should('contain.text', 'FLYER FIND THE BUG SESSION.pdf')
 
       cy.get('div.consent-field')
         .find('input')
